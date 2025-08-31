@@ -1,9 +1,25 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using SalesWebMvc.Models;
+using Microsoft.Extensions.Options;
+using Pomelo.EntityFrameworkCore.MySql;
+using Pomelo.EntityFrameworkCore.MySql.Migrations;
+using Pomelo.EntityFrameworkCore.MySql.Storage;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+
+using SalesWebMvc.Data;
+using System.Configuration;
+
+// Adicione esta linha para importar ServerVersion
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<SalesWebMvcContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("SalesWebMvcContext") ?? throw new InvalidOperationException("Connection string 'SalesWebMvcContext' not found.")));
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("SalesWebMvcContext"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("SalesWebMvcContext")),
+        builder => builder.MigrationsAssembly("SalesWebMvc")
+    )
+);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -24,11 +40,10 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapStaticAssets();
-
+        
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
-
 
 app.Run();

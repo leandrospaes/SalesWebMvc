@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using SalesWebMvc.Models.ViewModels;
+using SalesWebMvc.Models;
 
 namespace SalesWebMvc.Controllers
 {
@@ -20,15 +20,6 @@ namespace SalesWebMvc.Controllers
 
         public IActionResult Privacy()
         {
-            return View();
-        }
-
-        public IActionResult Sobre()
-        {
-            ViewData["Message"] = "SOBRE NÓS";
-            ViewData["Email"] = "contato@laredonsistemas.com.br";
-
-
             return View();
         }
 
